@@ -109,10 +109,10 @@ getDataUser() {
 }
 
 export const api = new Api({
-  url: 'https://api.pr-mesto.nomoredomains.xyz',
+  url: 'https://mesto.nomoreparties.co/v1/cohort-62',
   headers: {
     'Content-Type': 'application/json',
-    authorization: `Bearer ${localStorage.getItem('jwt')}`,
+    authorization: "fff1efa7-9818-44da-ba96-913e90767349",
   },
 });
 
