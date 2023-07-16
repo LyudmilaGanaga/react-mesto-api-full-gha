@@ -95,31 +95,32 @@ const login = (req, res, next) => {
 };
 
 const getUserById = (req, res, next) => {
-  // const { userId } = req.params;
+  const { userId } = req.params;
 
-  User.findById(req.params.id)
+  User.findById(userId)
     .orFail(() => {
       throw new NotFoundError('User not found');
     })
     .then((user) => res
       .status(200)
       .send({ user }))
-
     .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequest('Плохой запрос'));
-      } else {
-        next(err);
+      if (err instanceof mongoose.Error.CastError) {
+        return next(new BadRequest('Плохой запрос'));
       }
+      return next(err);
     });
 };
+
 //     .catch((err) => {
-//       if (err instanceof mongoose.Error.CastError) {
-//         return next(new BadRequest('Плохой запрос'));
+//       if (err.name === 'CastError') {
+//         next(new BadRequest('Плохой запрос'));
+//       } else {
+//         next(err);
 //       }
-//       return next(err);
 //     });
 // };
+
 
 const updateUser = (req, res, next) => {
   const { name, about } = req.body;
