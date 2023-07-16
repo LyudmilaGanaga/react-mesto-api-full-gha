@@ -1,14 +1,14 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const jsonWebToken = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
+
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 const BadRequest = require('../errors/BadRequest');
 const NotFoundError = require('../errors/NotFoundError');
 const Conflict = require('../errors/Conflict');
-
-const { NODE_ENV, JWT_SECRET } = process.env;
 
 const getUsers = (req, res, next) => {
   // eslint-disable-next-line no-console
@@ -17,7 +17,7 @@ const getUsers = (req, res, next) => {
     .orFail(() => {
       throw new NotFoundError('User not found');
     })
-    .then((users) => res.status(200).send({ data: users }))
+    .then((users) => res.status(200).send(users))
     .catch((err) => {
       next(err);
     });
@@ -88,25 +88,38 @@ const login = (req, res, next) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jsonWebToken.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'SECRET', { expiresIn: '7d' });
       return res.status(200).send({ token });
     })
     .catch(next);
 };
 
 const getUserById = (req, res, next) => {
-  const { userId } = req.params;
+  // const { userId } = req.params;
 
-  User.findById(userId)
-    .orFail(new NotFoundError('User not found.'))
-    .then((users) => res.send(users))
+  User.findById(req.params.id)
+    .orFail(() => {
+      throw new NotFoundError('User not found');
+    })
+    .then((user) => res
+      .status(200)
+      .send({ user }))
+
     .catch((err) => {
-      if (err instanceof mongoose.Error.CastError) {
-        return next(new BadRequest('Плохой запрос'));
+      if (err.name === 'CastError') {
+        next(new BadRequest('Плохой запрос'));
+      } else {
+        next(err);
       }
-      return next(err);
     });
 };
+//     .catch((err) => {
+//       if (err instanceof mongoose.Error.CastError) {
+//         return next(new BadRequest('Плохой запрос'));
+//       }
+//       return next(err);
+//     });
+// };
 
 const updateUser = (req, res, next) => {
   const { name, about } = req.body;
@@ -114,15 +127,20 @@ const updateUser = (req, res, next) => {
   User.findByIdAndUpdate(
     req.user._id,
     { name, about },
-    { new: true, runValidators: true },
+    {
+      new: true,
+      runValidators: true,
+      upsert: false,
+    },
   )
-    .orFail(new NotFoundError('User not found.'))
-    .then((user) => res.send(user))
+    // .orFail(new NotFoundError('User not found.'))
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
-        return next(new BadRequest('Плохой запрос'));
+        next(new BadRequest('Плохой запрос'));
+      } else {
+        next(err);
       }
-      return next(err);
     });
 };
 
