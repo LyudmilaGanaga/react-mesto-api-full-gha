@@ -1,0 +1,10 @@
+.register__form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+
+  padding: 50px 0 0;
+  /* display: grid;
+  grid-template-columns: 1fr; */
+}

@@ -1,0 +1,6 @@
+.header__register-containter {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  font-size: 18px;
+}
