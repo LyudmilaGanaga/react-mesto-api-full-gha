@@ -74,12 +74,12 @@ const createUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
-        return next(new BadRequest('BadRequest'));
+        next(new BadRequest('BadRequest'));
+      } else if (err.name === 'MongoServerError' && err.code === 11000) {
+        next(new Conflict('Конфликт запроса'));
+      } else {
+        next(err);
       }
-      if (err.name === 'MongoServerError' && err.code === 11000) {
-        return next(new Conflict('Конфликт запроса'));
-      }
-      return next(err);
     });
 };
 
@@ -112,15 +112,6 @@ const getUserById = (req, res, next) => {
     });
 };
 
-//     .catch((err) => {
-//       if (err.name === 'CastError') {
-//         next(new BadRequest('Плохой запрос'));
-//       } else {
-//         next(err);
-//       }
-//     });
-// };
-
 const updateUser = (req, res, next) => {
   const { name, about } = req.body;
 
@@ -152,13 +143,14 @@ const updateAvatar = (req, res, next) => {
     { avatar },
     { new: true, runValidators: true },
   )
-    .orFail(new NotFoundError('User not found.'))
-    .then((user) => res.send(user))
+    // .orFail(new NotFoundError('User not found.'))
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
-        return next(new BadRequest('Плохой запрос'));
+        next(new BadRequest('Плохой запрос'));
+      } else {
+        next(err);
       }
-      return next(err);
     });
 };
 
