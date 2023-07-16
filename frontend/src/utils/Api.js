@@ -1,7 +1,7 @@
 class Api {
-  constructor({url, headers}) {
-    this._url = url;
-    this._headers = headers;
+  constructor(config) {
+    this._url = config.url;
+    this._headers = config.headers;
   }
 
   // проверка
@@ -96,18 +96,18 @@ class Api {
   }
 }
 
-export const api = new Api({
-  url: 'https://api.pr-mesto.nomoredomains.xyz',
-  headers: {
-    'Content-Type': 'application/json',
-    authorization: `Bearer ${localStorage.getItem('jwt')}`,
-  },
-});
-
 // export const api = new Api({
-//   url: "https://mesto.nomoreparties.co/v1/cohort-62",
+//   url: 'https://api.pr-mesto.nomoredomains.xyz',
 //   headers: {
-//     "Content-Type": "application/json",
-//     authorization: "fff1efa7-9818-44da-ba96-913e90767349",
+//     'Content-Type': 'application/json',
+//     authorization: `Bearer ${localStorage.getItem('jwt')}`,
 //   },
 // });
+
+export const api = new Api({
+  url: "https://mesto.nomoreparties.co/v1/cohort-62",
+  headers: {
+    "Content-Type": "application/json",
+    authorization: "fff1efa7-9818-44da-ba96-913e90767349",
+  },
+});
