@@ -8,6 +8,8 @@ const BadRequest = require('../errors/BadRequest');
 const NotFoundError = require('../errors/NotFoundError');
 const Conflict = require('../errors/Conflict');
 
+const { NODE_ENV, JWT_SECRET } = process.env;
+
 const getUsers = (req, res, next) => {
   // eslint-disable-next-line no-console
   User
@@ -86,8 +88,8 @@ const login = (req, res, next) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jsonWebToken.sign({ _id: user._id }, 'SECRET', { expiresIn: '7d' });
-      res.status(200).send({ token });
+      const token = jsonWebToken.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
+      return res.status(200).send({ token });
     })
     .catch(next);
 };
