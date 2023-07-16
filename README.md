@@ -9,7 +9,7 @@
 
 ## Ссылки на проект
 
-IP 158.160.16.168
+IP 158.160.77.105
 
 Frontend https://pr-mesto.nomoredomains.work
 
