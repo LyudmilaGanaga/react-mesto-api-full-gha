@@ -1,40 +1,50 @@
-import React, { useEffect, useState } from "react";
-import Header from "./Header";
+// компоненты
 import Main from "./Main";
 import Footer from "./Footer";
 import ImagePopup from "./ImagePopup";
-import { api } from "../utils/Api";
-import { CurrentUserContext } from "../contexts/CurrentUserContext";
-import EditProfilePopup from "./EditProfilePopup";
-import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
 import PopupWithSubmit from "./PopupWithSubmit";
 
-import * as auth from "../utils/auth.js";
+import EditProfilePopup from "./EditProfilePopup";
+import EditAvatarPopup from "./EditAvatarPopup";
+
+import Header from "./Header";
+
+// авторизация
 import { Login } from "./Login";
 import { Register } from "./Register";
 import { InfoTooltip } from "./InfoTooltip";
-import ProtectedRoute from "./ProtectedRoute";
+
+// допы
 import { Route, Routes, useNavigate, Navigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { api } from "../utils/Api";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import * as auth from "../utils/auth.js";
+import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
+  // popup
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
-  const [isPopupWithSubmit, setIsPopupWithSubmit] = useState(false);
-  const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
   const [isInfoTooltip, setIsInfoTooltip] = useState(false);
 
+  const [isPopupWithSubmit, setIsPopupWithSubmit] = useState(false);
+  const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
+
+  // апи
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [email, setEmail] = useState("");
+
+  // карточки
   const [selectedCard, setSelectedCard] = useState({});
   const [cards, setCards] = useState([]);
   const [currentUser, setCurrentUser] = useState({});
 
-  const [loggedIn, setLoggedIn] = useState(false);
   const navigate = useNavigate();
-
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [email, setEmail] = useState("");
-
+  
   // Обработка закрытия вне элемента
   useEffect(() => {
     function handleEscClose(e) {
@@ -97,16 +107,19 @@ function App() {
     setSelectedCard(card);
     setIsImagePopupOpen(true);
   }
-
+// ------------------------------------------------------
+// удаление карточки
   function handleCardDelete(card) {
     api
       .deleteCard(card._id)
       .then(() => {
         setCards((state) => state.filter((c) => c._id !== card._id));
       })
-      .catch((err) => alert(err));
+      .catch((err) => {
+        console.log(`Ошибка в App, handleCardDelete: ${err}`);
+      });
   }
-
+// ------------------------------------------------------
   function handleCardLike(card) {
     // Снова проверяем, есть ли уже лайк на этой карточке
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
@@ -118,29 +131,36 @@ function App() {
           state.map((c) => (c._id === card._id ? newCard : c))
         );
       })
-      .catch((err) => alert(err));
+      .catch((err) => {
+        console.log(`Ошибка в App, handleCardLike: ${err}`);
+      });
   }
-
-  function handleUpdateUser(value) {
+// ------------------------------------------------------
+// обновление инфо юзера
+  function handleUpdateUser(data) {
     api
-      .editInfoUser(value)
+      .editInfoUser(data)
+      .then((res) => {
+        setCurrentUser(res);
+        closeAllPopups();
+      }).catch((err) => {
+        console.log(`Ошибка в App, handleUpdateUser: ${err}`);
+      });
+  }
+// -----------------------------------------------------------------------
+// обновление аватара
+  function handleUpdateAvatar(data) {
+    api
+      .editUserAvatar(data)
       .then((res) => {
         setCurrentUser(res);
         closeAllPopups();
       })
-      .catch((err) => alert(err));
+      .catch((err) => {
+        console.log(`Ошибка в App, handleUpdateAvatar: ${err}`);
+      });
   }
-
-  function handleUpdateAvatar(value) {
-    api
-      .editUserAvatar(value)
-      .then((res) => {
-        setCurrentUser(res);
-        closeAllPopups();
-      })
-      .catch((err) => alert(err));
-  }
-
+// -----------------------------------------------------------------------
   function handleAddPlaceSubmit(card) {
     api
       .addCard(card)
@@ -148,15 +168,17 @@ function App() {
         setCards([newCard, ...cards]);
         closeAllPopups();
       })
-      .catch((err) => alert(err));
+      .catch((err) => {
+        console.log(`Ошибка в App, handleAddPlace: ${err}`);
+      });
   }
-
+// -----------------------------------------------------------------------
   function handleCardDeleteConfirm(card) {
     setIsPopupWithSubmit(true);
     setSelectedCard(card);
   }
-// ===========================================================================
-  
+// -----------------------------------------------------------------------
+  // токен
     function checkToken() {
       const token = localStorage.getItem("token");
       if (token) {
@@ -179,59 +201,83 @@ function App() {
     checkToken();
       // eslint-disable-next-line react-hooks/exhaustive-deps
       }, []);
-
+// -----------------------------------------------------------------------
   // регистрация
   function handleRegister({ email, password }) {
     auth
       .register(email, password)
-      .then((data) => {
-        if (data) {
+      .then((res) => {
+        if (res) {
+          console.log(res, "Это res из register в App.jsx")
           setIsSuccess(true);
           navigate("/sign-in", { replace: true });
         }
       })
       .catch((err) => {
         setIsSuccess(false);
-        console.log(err);
+        console.log(`Ошибка в регистрации, в App: ${err}`)
       })
+      // при ошибке выходит сообщение
       .finally(() => setIsInfoTooltip(true));
   }
+  // -----------------------------------------------------------------------
   // вход
   function handleLogin({ email, password }) {
     auth
       .login(email, password)
-      .then((user) => {
-        if (user.token) {
-          localStorage.setItem("token", user.token);
-          setLoggedIn(true);
+      .then((data) => {
+        if (data.token) {
+          console.log(data, "Это res из login в App.jsx")
           setEmail(email);
+          localStorage.setItem("token", data.token);
+          setLoggedIn(true);
           navigate("/", { replace: true });
         }
       })
       .catch((err) => {
-        console.log(err);
+        setIsSuccess(false);
         setIsInfoTooltip(true);
+        console.log(`Ошибка в App, loginUser: ${err}`);
       });
   }
+// -----------------------------------------------------------------------
+
   // выход
   function handleLogout() {
-    setLoggedIn(false);
     localStorage.removeItem("token");
-    navigate("/sign-in");
+    setLoggedIn(false);
+    setEmail('');
+    navigate('/sign-in', { replace: true });
   }
-
+// -----------------------------------------------------------------------
+// получение пользователя
   useEffect(() => {
     if (loggedIn) {
-      Promise.all([api.getInitialCards(), api.getDataUser()])
-        .then(([initialCards, user]) => {
-          setCards(initialCards);
-          setCurrentUser(user);
+      api.getInitialCards()
+        .then((res) => {
+          // setCards(initialCards);
+          setCurrentUser(res.data);
         })
         .catch((err) => {
-          console.log("Ошибка: ", err);
+          console.log(`Ошибка: ${err.status}`);
         });
     }
   }, [loggedIn]);
+
+  // -----------------------------------------------------------------------
+// получение карточки
+useEffect(() => {
+  if (loggedIn) {
+    api.getDataUser()
+      .then((data) => {
+        setCards(data.reverse());
+        // setCurrentUser(user);
+      })
+      .catch((err) => {
+        console.log(`Ошибка: ${err.status}`);
+      });
+  }
+}, [loggedIn]);
 
   return (
     <div className="page">
