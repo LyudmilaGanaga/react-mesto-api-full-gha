@@ -109,7 +109,7 @@ getDataUser() {
 }
 
 export const api = new Api({
-  url: 'https://mesto.nomoreparties.co/v1/cohort-62',
+  url: 'http://http://158.160.77.105:3000',
   headers: {
     'Content-Type': 'application/json',
     authorization: "fff1efa7-9818-44da-ba96-913e90767349",

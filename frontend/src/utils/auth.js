@@ -1,4 +1,4 @@
-export const BASE_URL = "https://auth.nomoreparties.co";
+export const BASE_URL = "http://http://158.160.77.105:3000";
 
 export const checkServer = (res) => {
   if (res.ok) {
