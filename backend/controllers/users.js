@@ -121,7 +121,6 @@ const getUserById = (req, res, next) => {
 //     });
 // };
 
-
 const updateUser = (req, res, next) => {
   const { name, about } = req.body;
 
