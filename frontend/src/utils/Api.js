@@ -109,10 +109,10 @@ getDataUser() {
 }
 
 export const api = new Api({
-  url: 'http://http://158.160.77.105:3000',
+  url: 'http://api.pr-mesto.nomoredomains.xyz',
   headers: {
     'Content-Type': 'application/json',
-    authorization: "fff1efa7-9818-44da-ba96-913e90767349",
+    authorization: `Bearer ${localStorage.getItem('jwt')}`,
   },
 });
 
