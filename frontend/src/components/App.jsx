@@ -161,9 +161,9 @@ function App() {
       });
   }
 // -----------------------------------------------------------------------
-  function handleAddPlaceSubmit(card) {
+  function handleAddPlaceSubmit(data) {
     api
-      .addCard(card)
+      .addCard(data)
       .then((newCard) => {
         setCards([newCard, ...cards]);
         closeAllPopups();

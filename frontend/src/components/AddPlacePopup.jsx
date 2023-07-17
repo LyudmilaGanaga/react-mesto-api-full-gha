@@ -73,17 +73,17 @@ export default function AddPlacePopup({ onAddPlace, isOpen, onClose }) {
         })}
         type="url"
         placeholder="Ссылка на картинку"
-        {...register("link", {
-          required: {
-            value: true,
-            message: "Пожалуйста введите URL",
-          },
-          pattern: {
-            value:
-              /^(http|https)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,}(:[0-9]{2,5})?(\/[a-zA-Z0-9\-\._\?\,\'\/\\\+&amp;%\$#\=~]*)*$/,
-            message: "Введите адрес сайта",
-          },
-        })}
+        // {...register("link", {
+        //   required: {
+        //     value: true,
+        //     message: "Пожалуйста введите URL",
+        //   },
+        //   pattern: {
+        //     value:
+        //       /^(http|https)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,}(:[0-9]{2,5})?(\/[a-zA-Z0-9\-\._\?\,\'\/\\\+&amp;%\$#\=~]*)*$/,
+        //     message: "Введите адрес сайта",
+        //   },
+        // })}
       />
       <span
         className={classNames("popup__input-error", {
