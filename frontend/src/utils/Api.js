@@ -109,7 +109,7 @@ getDataUser() {
 }
 
 export const api = new Api({
-  url: 'http://api.pr-mesto.nomoredomains.xyz',
+  url: 'https://api.pr-mesto.nomoredomains.xyz',
   headers: {
     'Content-Type': 'application/json',
     authorization: `Bearer ${localStorage.getItem('jwt')}`,

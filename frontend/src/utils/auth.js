@@ -1,4 +1,4 @@
-export const BASE_URL = "http://api.pr-mesto.nomoredomains.xyz";
+export const BASE_URL = "https://api.pr-mesto.nomoredomains.xyz";
 
 export const checkServer = (res) => {
   if (res.ok) {
