@@ -108,6 +108,34 @@ function App() {
     setIsImagePopupOpen(true);
   }
 // ------------------------------------------------------
+// -----------------------------------------------------------------------
+// получение пользователя
+useEffect(() => {
+  if (loggedIn) {
+    api.getDataUser()
+      .then((res) => {
+        // setCards(initialCards);
+        setCurrentUser(res.data);
+      })
+      .catch((err) => {
+        console.log(`Ошибка: ${err.status}`);
+      });
+  }
+}, [loggedIn]);
+
+// -----------------------------------------------------------------------
+// получение карточки
+useEffect(() => {
+if (loggedIn) {
+  api.getInitialCards()
+    .then((data) => {
+      setCards(data.reverse());
+    })
+    .catch((err) => {
+      console.log(`Ошибка: ${err.status}`);
+    });
+}
+}, [loggedIn]);
 // удаление карточки
   function handleCardDelete(card) {
     api
@@ -249,35 +277,6 @@ function App() {
     setEmail('');
     navigate('/sign-in', { replace: true });
   }
-// -----------------------------------------------------------------------
-// получение пользователя
-  useEffect(() => {
-    if (loggedIn) {
-      api.getDataUser()
-        .then((res) => {
-          // setCards(initialCards);
-          setCurrentUser(res.data);
-        })
-        .catch((err) => {
-          console.log(`Ошибка: ${err.status}`);
-        });
-    }
-  }, [loggedIn]);
-
-  // -----------------------------------------------------------------------
-// получение карточки
-useEffect(() => {
-  if (loggedIn) {
-    api.getInitialCards()
-      .then((res) => {
-        setCards(res);
-        // setCurrentUser(data);
-      })
-      .catch((err) => {
-        console.log(`Ошибка: ${err.status}`);
-      });
-  }
-}, [loggedIn]);
 
   return (
     <div className="page">

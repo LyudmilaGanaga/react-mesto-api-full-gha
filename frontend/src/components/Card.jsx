@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 export default function Card({
@@ -11,28 +11,18 @@ export default function Card({
   const handleLikeClick = () => onCardLike(card);
   const handleDeleteClick = () => onCardDeleteConfirm(card);
 
-
-  const currentUser = React.useContext(CurrentUserContext);
-
-  const isOwn = currentUser._id === card.owner;
-  const isLiked = card.likes.some((like) => like._id === currentUser._id);
+  const CurrentUserContext = useContext(CurrentUserContext);
+  // Определяем, являемся ли мы владельцем текущей карточки
+  const isOwn = card.owner._id === CurrentUserContext._id;
+  // Определяем, есть ли у карточки лайк, поставленный текущим пользователем
+  const isLiked = card.likes.some((i) => i._id === CurrentUserContext._id);
+  // Создаём переменную, которую после зададим в className для кнопки лайка
   const cardLikeButtonClassName = `element__like ${
-      isLiked && "element__like_active"
-    }`;
-
-  // const currentUser = React.useContext(CurrentUserContext);
-
-  // // Определяем, являемся ли мы владельцем текущей карточки
-  // const isOwn = card.owner._id === currentUser._id;
-  // // Определяем, есть ли у карточки лайк, поставленный текущим пользователем
-  // const isLiked = card.likes.some(i => i._id === currentUser._id);
-  // // Создаём переменную, которую после зададим в className для кнопки лайка
-  // const cardLikeButtonClassName = `element__like ${
-  //   isLiked && "element__like_active"
-  // }`;
+    isLiked && "element__like_active"
+  }`;
 
   return (
-    <CurrentUserContext.Provider value={currentUser}>
+    // <CurrentUserContext.Provider value={currentUser}>
       <div className="element">
         {isOwn && (
           <button
@@ -44,7 +34,7 @@ export default function Card({
         <img
           className="element__image"
           src={card.link}
-          alt={`Картинка ${card.name}`} 
+          alt={card.name}
           onClick={handleClick}
         />
         <div className="element__group">
@@ -59,6 +49,6 @@ export default function Card({
           </div>
         </div>
       </div>
-    </CurrentUserContext.Provider>
+    // </CurrentUserContext.Provider>
   );
 }
