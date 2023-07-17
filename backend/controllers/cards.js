@@ -84,7 +84,7 @@ const likeCard = (req, res, next) => {
     .orFail(() => {
       throw new NotFoundError('Card not found');
     })
-    .then((card) => res.status(200).send({ data: card, message: 'ОК' }))
+    .then((card) => res.status(200).send(card))
 
     .catch((err) => {
       if (err.name === 'CastError') {
