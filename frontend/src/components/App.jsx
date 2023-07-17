@@ -271,7 +271,7 @@ useEffect(() => {
     api.getInitialCards()
       .then((data) => {
         setCards(data.reverse());
-        // setCurrentUser(user);
+        setCurrentUser(data);
       })
       .catch((err) => {
         console.log(`Ошибка: ${err.status}`);
