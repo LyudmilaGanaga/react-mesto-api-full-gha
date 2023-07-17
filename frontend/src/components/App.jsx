@@ -269,9 +269,9 @@ function App() {
 useEffect(() => {
   if (loggedIn) {
     api.getInitialCards()
-      .then((data) => {
-        setCards(data.reverse());
-        setCurrentUser(data);
+      .then((res) => {
+        setCards(res);
+        // setCurrentUser(data);
       })
       .catch((err) => {
         console.log(`Ошибка: ${err.status}`);
