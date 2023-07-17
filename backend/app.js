@@ -1,20 +1,21 @@
 require('dotenv').config();
+
 const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
-// const cors = require('cors');
 const { requestLogger, errorLogger } = require('./middlwares/logger');
-const routes = require('./routes');
 
+// const cors = require('cors');
+
+const routes = require('./routes');
 const errorHandler = require('./middlwares/error');
 
 const { PORT = 3000 } = process.env;
+const app = express();
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
   useNewUrlParser: true,
 });
-
-const app = express();
 
 // app.use(cors);
 

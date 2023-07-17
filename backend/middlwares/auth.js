@@ -9,7 +9,6 @@ module.exports = (req, res, next) => {
   const { authorization } = req.headers;
   const bearer = 'Bearer ';
 
-  // eslint-disable-next-line no-console
   if (!authorization || !authorization.startsWith(bearer)) {
     return next(new UnauthorizedError('Необходима авторизация'));
   }
@@ -18,7 +17,7 @@ module.exports = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'SECRET');
+    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
     req.user = {
       _id: new mongoose.Types.ObjectId(payload._id),
     };
