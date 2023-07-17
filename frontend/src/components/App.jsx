@@ -207,12 +207,12 @@ function App() {
     auth
       .register(email, password)
       .then((res) => {
-        if (res) {
+        
           console.log(res, "Это res из register в App.jsx")
           setIsSuccess(true);
           navigate("/sign-in", { replace: true });
         }
-      })
+      )
       .catch((err) => {
         setIsSuccess(false);
         console.log(`Ошибка в регистрации, в App: ${err}`)
