@@ -253,7 +253,7 @@ function App() {
 // получение пользователя
   useEffect(() => {
     if (loggedIn) {
-      api.getInitialCards()
+      api.getDataUser()
         .then((res) => {
           // setCards(initialCards);
           setCurrentUser(res.data);
@@ -268,7 +268,7 @@ function App() {
 // получение карточки
 useEffect(() => {
   if (loggedIn) {
-    api.getDataUser()
+    api.getInitialCards()
       .then((data) => {
         setCards(data.reverse());
         // setCurrentUser(user);
