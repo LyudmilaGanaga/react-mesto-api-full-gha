@@ -26,8 +26,13 @@ const createCard = (req, res, next) => {
         owner: req.user._id,
       },
     )
-    .then((card) => res.status(201).send({ data: card }))
-
+    .then((card) => {
+      card
+        .populate('owner')
+        .then(() => {
+          res.status(201).send(card);
+        });
+    })
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
         next(new BadRequest('Плохой запрос'));
