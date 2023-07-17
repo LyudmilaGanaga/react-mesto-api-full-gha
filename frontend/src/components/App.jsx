@@ -18,7 +18,7 @@ import { InfoTooltip } from "./InfoTooltip";
 // допы
 import { Route, Routes, useNavigate, Navigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import { api } from "../utils/Api";
+import  api  from "../utils/Api";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import * as auth from "../utils/auth.js";
 import ProtectedRoute from "./ProtectedRoute";
