@@ -1,12 +1,12 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import PopupWithForm from "./PopupWithForm";
-import { CurrentUserContext } from "../contexts/CurrentUserContext";
+// import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 import { useForm } from "react-hook-form";
 import classNames from "classnames";
 
 export default function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
-  const currentUser = useContext(CurrentUserContext);
+  
   const {
     register,
     handleSubmit,
@@ -16,16 +16,17 @@ export default function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
     mode: "onChange",
   });
 
-  const avatarRef = useRef();
+  function onSubmit({ avatar }) {
+    onUpdateAvatar({ avatar });
+  }
+
+  // const avatarRef = useRef();
 
   useEffect(() => {
     reset();
     // avatarRef.current.value = "";
   }, [isOpen, reset]);
 
-  function onSubmit({ avatar }) {
-    onUpdateAvatar({ avatar });
-  }
 
   return (
     <PopupWithForm
@@ -38,17 +39,19 @@ export default function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
       isDirty={isDirty}
     >
       <input
-        ref={avatarRef}
         className={classNames("popup__input", {
           popup__input_type_error: errors.avatar,
         })}
         type="url"
         placeholder="Ссылка на картинку"
         {...register("avatar", {
-          required: "Пожалуйста введите URL",
+          required: {
+          value: true,
+          message: "Пожалуйста введите URL",
+          },
           pattern: {
-            // value:
-            //   /^(http|https)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,}(:[0-9]{2,5})?(\/[a-zA-Z0-9\-\._\?\,\'\/\\\+&amp;%\$#\=~]*)*$/,
+            value:
+            /(https?:\/\/)(www)?([a-zA-Z0-9-._~:/?#[\]@!$&'()*+,;=])*#?$/,
             message: "Введите адрес сайта",
           },
         })}
