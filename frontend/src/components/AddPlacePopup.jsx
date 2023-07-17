@@ -80,7 +80,7 @@ export default function AddPlacePopup({ onAddPlace, isOpen, onClose }) {
           },
           pattern: {
             value:
-              /^(http|https)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,}(:[0-9]{2,5})?(\/[a-zA-Z0-9\-\._\?\,\'\/\\\+&amp;%\$#\=~]*)*$/,
+            /(https?:\/\/)(www)?([a-zA-Z0-9-._~:/?#[\]@!$&'()*+,;=])*#?$/,
             message: "Введите адрес сайта",
           },
         })}
