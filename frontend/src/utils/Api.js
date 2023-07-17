@@ -105,7 +105,7 @@ getDataUser() {
 }
 
 export const api = new Api({
-  fetchUrl: 'https://api.pr-mesto.nomoredomains.xyz',
+  url: 'https://api.pr-mesto.nomoredomains.xyz',
   headers: {
   'Accept': 'application/json',
   'Content-type': 'application/json',
