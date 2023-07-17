@@ -11,11 +11,11 @@ export default function Card({
   const handleLikeClick = () => onCardLike(card);
   const handleDeleteClick = () => onCardDeleteConfirm(card);
 
-  const CurrentUserContext = useContext(CurrentUserContext);
+  const сurrentUserContext = useContext(CurrentUserContext);
   // Определяем, являемся ли мы владельцем текущей карточки
-  const isOwn = card.owner._id === CurrentUserContext._id;
+  const isOwn = card.owner._id === сurrentUserContext._id;
   // Определяем, есть ли у карточки лайк, поставленный текущим пользователем
-  const isLiked = card.likes.some((i) => i._id === CurrentUserContext._id);
+  const isLiked = card.likes.some((i) => i._id === сurrentUserContext._id);
   // Создаём переменную, которую после зададим в className для кнопки лайка
   const cardLikeButtonClassName = `element__like ${
     isLiked && "element__like_active"
