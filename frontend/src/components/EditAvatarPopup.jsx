@@ -1,12 +1,14 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import PopupWithForm from "./PopupWithForm";
-import { CurrentUserContext } from "../contexts/CurrentUserContext";
+// import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 import { useForm } from "react-hook-form";
 import classNames from "classnames";
 
-export default function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
-  const currentUser = useContext(CurrentUserContext);
+export default function EditAvatarPopup({ onUpdateAvatar, isOpen, onClose }) {
+
+  // const currentUser = useContext(CurrentUserContext);
+  
   const {
     register,
     handleSubmit,

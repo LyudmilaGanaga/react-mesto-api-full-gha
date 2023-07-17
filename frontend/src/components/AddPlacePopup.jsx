@@ -4,7 +4,7 @@ import PopupWithForm from "./PopupWithForm";
 import { useForm } from "react-hook-form";
 import classNames from "classnames";
 
-export default function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
+export default function AddPlacePopup({ onAddPlace, isOpen, onClose }) {
   const {
     register,
     setValue,

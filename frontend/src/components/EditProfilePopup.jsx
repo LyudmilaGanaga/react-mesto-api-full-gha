@@ -6,7 +6,7 @@ import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import { useForm } from "react-hook-form";
 import classNames from "classnames";
 
-export default function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
+export default function EditProfilePopup({ onUpdateUser, isOpen, onClose }) {
   // const [profileName, setProfileName] = useState("");
   // const [profileDescription, setProfileDescription] = useState("");
   // Подписка на контекст
