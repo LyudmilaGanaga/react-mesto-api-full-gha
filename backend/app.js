@@ -5,19 +5,15 @@ const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 const { requestLogger, errorLogger } = require('./middlwares/logger');
 
-// const cors = require('cors');
-
 const routes = require('./routes');
 const errorHandler = require('./middlwares/error');
+// const cors = require('cors');
+const cors = require('./middlwares/cors');
 
 const { PORT = 3000 } = process.env;
 const app = express();
 
-mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
-  useNewUrlParser: true,
-});
-
-// app.use(cors);
+app.use(cors);
 
 app.use(requestLogger);
 
@@ -34,6 +30,10 @@ app.use(errorLogger);
 
 app.use(errors());
 app.use(errorHandler);
+
+mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
+  useNewUrlParser: true,
+});
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
