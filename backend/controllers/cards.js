@@ -102,12 +102,11 @@ const dislikeCard = (req, res, next) => {
     { $pull: { likes: userId } },
     { new: true },
   )
-    .then((card) => {
-      if (!card) {
-        throw new NotFoundError('Card not found');
-      }
-      res.send(card);
+    .populate(['owner', 'likes'])
+    .orFail(() => {
+      throw new NotFoundError('Card not found');
     })
+    .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'BadRequest') {
         next(new BadRequest('Плохой запрос'));
