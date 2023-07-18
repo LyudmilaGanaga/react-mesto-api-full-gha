@@ -22,7 +22,6 @@ export default function Card({
   }`;
 
   return (
-    // <CurrentUserContext.Provider value={currentUser}>
       <div className="element">
         {isOwn && (
           <button
@@ -49,6 +48,5 @@ export default function Card({
           </div>
         </div>
       </div>
-    // </CurrentUserContext.Provider>
   );
 }

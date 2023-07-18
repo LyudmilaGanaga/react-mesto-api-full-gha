@@ -7,13 +7,8 @@ import { useForm } from "react-hook-form";
 import classNames from "classnames";
 
 export default function EditProfilePopup({ onUpdateUser, isOpen, onClose }) {
-  // const [profileName, setProfileName] = useState("");
-  // const [profileDescription, setProfileDescription] = useState("");
-  // Подписка на контекст
-  const currentUser = useContext(CurrentUserContext);
 
-  // const [nameError, setNameError] = useState("");
-  // const [descriptionError, setDescriptionError] = useState("");
+  const currentUser = useContext(CurrentUserContext);
 
   const {
     register,
@@ -57,8 +52,6 @@ export default function EditProfilePopup({ onUpdateUser, isOpen, onClose }) {
           name="name"
           placeholder="Имя"
           type="text"
-          // value={setValue}
-          // onChange={handleChange}
           minLength="2"
           maxLength="40"
           required

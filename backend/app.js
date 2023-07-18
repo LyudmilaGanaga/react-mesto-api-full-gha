@@ -7,7 +7,6 @@ const { requestLogger, errorLogger } = require('./middlwares/logger');
 
 const routes = require('./routes');
 const errorHandler = require('./middlwares/error');
-// const cors = require('cors');
 const cors = require('./middlwares/cors');
 
 const { PORT = 3000 } = process.env;

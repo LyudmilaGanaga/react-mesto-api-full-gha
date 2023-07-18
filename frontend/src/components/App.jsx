@@ -44,7 +44,7 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
 
   const navigate = useNavigate();
-  
+
   // Обработка закрытия вне элемента
   useEffect(() => {
     function handleEscClose(e) {
@@ -80,7 +80,7 @@ function App() {
     isPopupWithSubmit,
     isInfoTooltip,
   ]);
-  
+
   // обработчики
   function handleEditProfileClick() {
     setIsEditProfilePopupOpen(true);
@@ -107,37 +107,41 @@ function App() {
     setSelectedCard(card);
     setIsImagePopupOpen(true);
   }
-// ------------------------------------------------------
-// -----------------------------------------------------------------------
-// получение пользователя
-useEffect(() => {
-  if (loggedIn) {
-    api.getDataUser()
-      .then((res) => {
-        // setCards(initialCards);
-        setCurrentUser(res.data);
-      })
-      .catch((err) => {
-        console.log(`Ошибка: ${err.status}`);
-      });
+
+  function handleCardDeleteConfirm(card) {
+    setSelectedCard(card);
+    setIsPopupWithSubmit(true);
   }
-}, [loggedIn]);
 
-// -----------------------------------------------------------------------
-// получение карточки
-useEffect(() => {
-if (loggedIn) {
-  api.getInitialCards()
-    .then((data) => {
-      setCards(data.reverse());
-    })
-    .catch((err) => {
-      console.log(`Ошибка: ${err.status}`);
-    });
-}
-}, [loggedIn]);
+  // получение пользователя
+  useEffect(() => {
+    if (loggedIn) {
+      api
+        .getDataUser()
+        .then((res) => {
+          setCurrentUser(res.data);
+        })
+        .catch((err) => {
+          console.log(`Ошибка в App, getDataUser: ${err.status}`);
+        });
+    }
+  }, [loggedIn]);
 
-// удаление карточки
+  // получение карточки
+  useEffect(() => {
+    if (loggedIn) {
+      api
+        .getInitialCards()
+        .then((data) => {
+          setCards(data.reverse());
+        })
+        .catch((err) => {
+          console.log(`Ошибка в App, getInitialCards: ${err.status}`);
+        });
+    }
+  }, [loggedIn]);
+
+  // удаление карточки
   function handleCardDelete(card) {
     api
       .deleteCard(card._id)
@@ -148,7 +152,7 @@ if (loggedIn) {
         console.log(`Ошибка в App, handleCardDelete: ${err}`);
       });
   }
-// ------------------------------------------------------
+  // лайк
   function handleCardLike(card) {
     // Снова проверяем, есть ли уже лайк на этой карточке
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
@@ -164,20 +168,21 @@ if (loggedIn) {
         console.log(`Ошибка в App, handleCardLike: ${err}`);
       });
   }
-// ------------------------------------------------------
-// обновление инфо юзера
+
+  // обновление инфо юзера
   function handleUpdateUser(data) {
     api
       .editInfoUser(data)
       .then((res) => {
         setCurrentUser(res);
         closeAllPopups();
-      }).catch((err) => {
+      })
+      .catch((err) => {
         console.log(`Ошибка в App, handleUpdateUser: ${err}`);
       });
   }
-// -----------------------------------------------------------------------
-// обновление аватара
+
+  // обновление аватара
   function handleUpdateAvatar(data) {
     api
       .editUserAvatar(data)
@@ -189,7 +194,8 @@ if (loggedIn) {
         console.log(`Ошибка в App, handleUpdateAvatar: ${err}`);
       });
   }
-// -----------------------------------------------------------------------
+
+  // добавление карточки
   function handleAddPlaceSubmit(data) {
     api
       .addCard(data)
@@ -198,66 +204,58 @@ if (loggedIn) {
         closeAllPopups();
       })
       .catch((err) => {
-        console.log(`Ошибка в App, handleAddPlace: ${err}`);
+        console.log(`Ошибка в App, handleAddPlaceSubmit: ${err}`);
       });
   }
-// -----------------------------------------------------------------------
-  function handleCardDeleteConfirm(card) {
-    setSelectedCard(card);
-    setIsPopupWithSubmit(true);
-    
-  }
-// -----------------------------------------------------------------------
+
   // токен
-    function checkToken() {
-      const token = localStorage.getItem("token");
-      if (token) {
-        auth
-          .checkToken(token)
-          .then((res) => {
-            if (res.data) {
-              setLoggedIn(true);
-              setEmail(res.data.email);
-              navigate("/", { replace: true });
-            }
-          })
-          .catch((err) => {
-            console.log(`Ошибка в checkToken, в App: ${err.status}`);
-          });
-        }    
-      }
+  function checkToken() {
+    const token = localStorage.getItem("token");
+    if (token) {
+      auth
+        .checkToken(token)
+        .then((res) => {
+          if (res.data) {
+            setLoggedIn(true);
+            setEmail(res.data.email);
+            navigate("/", { replace: true });
+          }
+        })
+        .catch((err) => {
+          console.log(`Ошибка в checkToken, в App: ${err.status}`);
+        });
+    }
+  }
 
   useEffect(() => {
     checkToken();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, []);
-// -----------------------------------------------------------------------
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // регистрация
   function handleRegister({ email, password }) {
     auth
       .register(email, password)
       .then((res) => {
-        
-          console.log(res, "Это res из register в App.jsx")
-          setIsSuccess(true);
-          navigate("/sign-in", { replace: true });
-        }
-      )
+        console.log(res, "Это res из register в App.jsx");
+        setIsSuccess(true);
+        navigate("/sign-in", { replace: true });
+      })
       .catch((err) => {
         setIsSuccess(false);
-        console.log(`Ошибка в регистрации, в App: ${err}`)
+        console.log(`Ошибка в App, handleRegister: ${err}`);
       })
-      // при ошибке выходит сообщение
+      
       .finally(() => setIsInfoTooltip(true));
   }
-  // -----------------------------------------------------------------------
+
   // вход
   function handleLogin({ email, password }) {
     auth
       .login(email, password)
       .then((data) => {
         if (data.token) {
-          console.log(data, "Это res из login в App.jsx")
+          console.log(data, "Это res из login в App.jsx");
           setEmail(email);
           localStorage.setItem("token", data.token);
           setLoggedIn(true);
@@ -267,17 +265,16 @@ if (loggedIn) {
       .catch((err) => {
         setIsSuccess(false);
         setIsInfoTooltip(true);
-        console.log(`Ошибка в App, loginUser: ${err}`);
+        console.log(`Ошибка в App, handleLogin: ${err}`);
       });
   }
-// -----------------------------------------------------------------------
 
   // выход
   function handleLogout() {
     localStorage.removeItem("token");
     setLoggedIn(false);
-    setEmail('');
-    navigate('/sign-in', { replace: true });
+    setEmail("");
+    navigate("/sign-in", { replace: true });
   }
 
   return (
@@ -304,7 +301,7 @@ if (loggedIn) {
             }
           />
 
-<Route path="/sign-in" element={<Login onLogin={handleLogin} />} />
+          <Route path="/sign-in" element={<Login onLogin={handleLogin} />} />
 
           <Route
             path="/sign-up"

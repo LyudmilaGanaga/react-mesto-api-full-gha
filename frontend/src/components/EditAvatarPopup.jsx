@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import PopupWithForm from "./PopupWithForm";
-// import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 import { useForm } from "react-hook-form";
 import classNames from "classnames";
@@ -20,11 +19,8 @@ export default function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
     onUpdateAvatar({ avatar });
   }
 
-  // const avatarRef = useRef();
-
   useEffect(() => {
     reset();
-    // avatarRef.current.value = "";
   }, [isOpen, reset]);
 
 
