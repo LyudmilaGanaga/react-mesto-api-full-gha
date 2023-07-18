@@ -8,8 +8,8 @@ const Forbidden = require('../errors/Forbidden');
 const getCards = (req, res, next) => {
   Card
     .find({})
-    .populate('owner')
-    .then((card) => res.status(200).send({ data: card }))
+    .populate(['owner', 'likes'])
+    .then((card) => res.status(200).send(card))
     .catch((err) => {
       next(err);
     });

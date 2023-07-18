@@ -136,6 +136,7 @@ if (loggedIn) {
     });
 }
 }, [loggedIn]);
+
 // удаление карточки
   function handleCardDelete(card) {
     api
@@ -202,8 +203,9 @@ if (loggedIn) {
   }
 // -----------------------------------------------------------------------
   function handleCardDeleteConfirm(card) {
-    setIsPopupWithSubmit(true);
     setSelectedCard(card);
+    setIsPopupWithSubmit(true);
+    
   }
 // -----------------------------------------------------------------------
   // токен
